@@ -63,7 +63,7 @@ def update_outliers(X, columns_medians, columns_means):
 def update_X(X, bound_delete=BOUND_DELETE, bound_change=BOUND_CHANGE):
 	"""Handles all of the preprocessing before training"""
 	ind_delete, ind_change = clean_data(X, bound_delete, bound_change)
-	X = update_outliers(X, [0, 23]+ind_delete, [24, 25])
+	X = update_outliers(X, [0, 23]+ind_change, [24, 25])
 	X = np.delete(X, ind_delete, axis=1)
 	return X, ind_delete
 

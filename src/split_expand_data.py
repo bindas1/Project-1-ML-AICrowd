@@ -13,6 +13,7 @@ def normalize(X):
     X     = (X-mu)/std
     return X, mu, std
 
+# same as build_poly(x, degree) from lab3
 def expand_X(X,d):
     """
     perform degree-d polynomial feature expansion of X, with bias but omitting interaction terms
@@ -54,11 +55,14 @@ def split_data(X, y, split_ratio, seed=1):
     # set seed
     np.random.seed(seed)
     
-    indices = np.arange(X.shape[0])
-    n          = X.shape[0]
-    X_train    = X[indices[0:int(n*split_ratio)],:]
-    y_train    = y[indices[0:int(n*split_ratio)]] 
-    X_test     = X[indices[int(n*(split_ratio)):],:] 
-    y_test     = y[indices[int(n*(split_ratio)):]] 
+    n = X.shape[0]
+    indices = indices = np.random.permutation(n)
+
+    ind_split = int(n*split_ratio)
+
+    X_train    = X[indices[0:ind_split],:]
+    y_train    = y[indices[0:ind_split]] 
+    X_test     = X[indices[ind_split:],:] 
+    y_test     = y[indices[ind_split:]] 
 
     return X_train, y_train, X_test, y_test
