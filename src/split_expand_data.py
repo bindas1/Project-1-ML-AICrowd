@@ -133,7 +133,8 @@ def expand_and_normalize_X(X,d):
     and normalize them.
     """
 
-    expand = expand_X(X,d)
+    #expand = expand_X(X,d)
+    expand = expand_X_cross_1_trigo(X, d, 2)
     expand_withoutBias,mu,std = normalize(expand[:,1:])
     expand[:,1:] = expand_withoutBias
     return expand, mu, std
