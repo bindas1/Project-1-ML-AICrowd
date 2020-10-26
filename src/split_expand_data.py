@@ -57,14 +57,8 @@ def expand_X_cross_1(X,d):
     expand = np.ones((X.shape[0],1))
     for idx in range(1,d+1): expand=np.hstack((expand, X**idx))
     for i in range(1, X.shape[1]):
-        print("enter")
         X_rotated = np.roll(X, i, axis=1)
-        print(X)
-        print("STOP")
-        print(X_rotated)
         expand=np.hstack((expand, X*X_rotated))
-        print("Nothing")
-        print(expand)
     return expand
 
 def expand_X_trigo(X,d):
@@ -91,20 +85,14 @@ def expand_X_cross_1_trigo(X,d,cross_d):
     expand = np.ones((X.shape[0],1))
     for idx in range(1,d+1): expand=np.hstack((expand, X**idx))
     for i in range(1, cross_d):
-        print("enter")
-        print(X)
         X_rotated = np.roll(X, i, axis=1)
-        print(X_rotated)
         j = i-1
         n = 1
         while(j>0):
-            print("enters while")
             X_rotated *= np.roll(X,i+n, axis=1)
             n += 1
             j-=1
-        print(X_rotated)
         expand=np.hstack((expand, X*X_rotated))
-        print(expand)
     expand=np.hstack((expand, np.cos(X)))
     expand=np.hstack((expand, np.sin(X)))
     expand=np.hstack((expand, np.tan(X)))
@@ -133,8 +121,8 @@ def expand_and_normalize_X(X,d):
     and normalize them.
     """
 
-    #expand = expand_X(X,d)
-    expand = expand_X_cross_1_trigo(X, d, 2)
+    expand = expand_X(X,d)
+    # expand = expand_X_cross_1_trigo(X, d, 2)
     expand_withoutBias,mu,std = normalize(expand[:,1:])
     expand[:,1:] = expand_withoutBias
     return expand, mu, std

@@ -3,6 +3,32 @@
 import csv
 import numpy as np
 
+from clean_data import *
+
+DATA_TRAIN_PATH = '../data/train.csv'
+DATA_TEST_PATH = '../data/test.csv'
+OUTPUT_PATH = '../data/submission.csv'
+
+
+def load_clean_data(data_path=DATA_TRAIN_PATH):
+    """Loads the training data and cleans it
+    Returns both y and improved tX with features without missing values.
+    """
+    y, tX, ids = load_csv_data(data_path)
+    tX_clean, _ = update_X(tX, bound_delete=0.9, bound_change=0.05)
+    return y, tX_clean
+
+def obtain_results(weights, data_path=DATA_TEST_PATH, output_path=OUTPUT_PATH):
+    _, tX_test, ids_test = load_csv_data(data_path)
+
+    # clean outliers just like for training data
+    tX_test = update_outliers(tX_test, [0, 4, 5, 6, 23, 26], [12, 24, 25, 27, 28])
+
+    tX_test_poly  = expand_X(tX_test,d)
+    tX_test_poly[:,1:]  = (tX_test_poly[:,1:]-mu_train_poly)/std_train_poly
+
+    y_pred = predict_labels(weights, tX_test_poly)
+    create_csv_submission(ids_test, y_pred, output_path)
 
 def load_csv_data(data_path, sub_sample=False):
     """Loads data and returns y (class labels), tX (features) and ids (event ids)"""
