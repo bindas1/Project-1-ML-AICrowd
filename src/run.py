@@ -7,9 +7,9 @@ from split_expand_data import *
 from clean_data_4_categories import *
 
 
-DATA_TRAIN_PATH = '../data/train.csv' 
-DATA_TEST_PATH = '../data/test.csv'
-OUTPUT_PATH = '../data/submission.csv'
+DATA_TRAIN_PATH = './train.csv' 
+DATA_TEST_PATH = './test.csv'
+OUTPUT_PATH = './submission.csv'
 
 y, tX, ids = load_csv_data(DATA_TRAIN_PATH)
 
@@ -43,7 +43,7 @@ X4_train, y4_train, X4_test, y4_test = split_data(tX4, y4, split_ratio=0.8)
 # store d to later use with real test set
 d=7
 
-# create expanded X_train and X_test and normalize
+# create expanded train and test sets, and normalize them (for each of the 4 categories)
 
 #Category 1
 X1_train_poly, X1_mu_train_poly, X1_std_train_poly = expand_and_normalize_X(X1_train, d)
@@ -81,6 +81,7 @@ accuracy1 = (np.mean(p1 == y1_test) * 100)
 accuracy2 = (np.mean(p2 == y2_test) * 100)
 accuracy3 = (np.mean(p3 == y3_test) * 100)
 accuracy4 = (np.mean(p4 == y4_test) * 100)
+
 # print the total accuracy
 print("Accuracy on our test set for all 4 categories {}".format(np.sum([len(y1_test)*accuracy1, len(y2_test)*accuracy2, len(y3_test)*accuracy3, len(y4_test)*accuracy4])/(len(y1_test)+len(y2_test)+len(y3_test)+len(y4_test))))
 
@@ -121,12 +122,13 @@ tX3_test_poly[:,1:] = (tX3_test_poly[:,1:] - X3_mu_train_poly) / X3_std_train_po
 tX4_test_poly  = expand_X_cross_1_trigo(tX4_test, d, 2)
 tX4_test_poly[:,1:] = (tX4_test_poly[:,1:] - X4_mu_train_poly) / X4_std_train_poly
 
-y_pred = np.empty(tX_test.shape[0])
+# Obtain the 4 predictions (for each category) and then merge them together in y_pred
 y1_pred = predict_labels(w1, tX1_test_poly)
 y2_pred = predict_labels(w2, tX2_test_poly)
 y3_pred = predict_labels(w3, tX3_test_poly)
 y4_pred = predict_labels(w4, tX4_test_poly)
 
+y_pred = np.empty(tX_test.shape[0])
 y_pred[tX1_test_ind] = y1_pred
 y_pred[tX2_test_ind] = y2_pred
 y_pred[tX3_test_ind] = y3_pred
