@@ -9,8 +9,6 @@ def sigmoid(t):
 def calculate_loss_log(y, tx, w):
     """compute the loss: negative log likelihood."""
     return np.sum(np.log(1 + np.exp(tx @ w)) - y * (tx @ w))
-    # h = sigmoid(tx@w)
-    # return np.squeeze(-(y.T@(np.log(h)) + (1-y).T@(np.log(1-h))))
 
 def calculate_gradient_log(y, tx, w):
     """compute the gradient of loss."""

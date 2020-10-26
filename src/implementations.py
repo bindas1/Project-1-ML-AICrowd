@@ -147,12 +147,9 @@ def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
 
     for i in range(max_iters):
         w, loss = learning_by_penalized_gradient(y, tx, w, gamma, lambda_)
-        if not (i % 10): 
-            print('Iteration {}, loss {}'.format(i, loss))
         losses.append(loss)
 
     return w, losses[-1]
-
 
 
 # Helper functions
@@ -312,25 +309,18 @@ def learning_by_gradient_descent(y, tx, w, gamma):
 
 # Helpers for regularized logistic regression
 
-def calculate_hessian(y, tx, w):
-    """return the Hessian of the loss function."""
-    h = sigmoid(tx@w)
-    h = np.diag(h.reshape(-1,1).T[0])
-    r = np.multiply(h, (1-h))
-    return tx.T@r@tx
-
 def penalized_logistic_regression(y, tx, w, lambda_):
-    """return the loss, gradient and hessian"""
+    """return the loss, gradient"""
     loss = calculate_loss_log(y, tx, w) + lambda_ * (np.linalg.norm(w, 2) ** 2) / 2
     grad = calculate_gradient_log(y, tx, w)
-    hess = calculate_hessian(y, tx, w) + lambda_
-    return loss, grad, hess
+    return loss, grad
 
 def learning_by_penalized_gradient(y, tx, w, gamma, lambda_):
     """
     Do one step of gradient descent, using the penalized logistic regression.
     Return the loss and updated w.
     """
-    loss, grad, hess = penalized_logistic_regression(y, tx, w, lambda_)
-    w = w - gamma * np.linalg.inv(hess) @ grad
+    loss, grad = penalized_logistic_regression(y, tx, w, lambda_)
+    w = w - gamma * grad
     return w, loss
+

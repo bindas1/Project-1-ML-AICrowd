@@ -32,6 +32,12 @@ def predict_labels(weights, data):
     
     return y_pred
 
+def predict_labels_log(weights, data):
+    """Generates class predictions given weights, and a test data matrix
+    !!! Remember that for this to work both y_train when training and y_test when testing should be set 0 and 1
+    Instead of -1, 1 !!!
+    """
+    return np.where(datay@w > 0.5, 1, 0)
 
 def create_csv_submission(ids, y_pred, name):
     """
